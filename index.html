@@ -242,7 +242,7 @@ canvas#wc{border-radius:50%;display:block;}
     <span class="prize-pill">🌸 Triệt Lông 0Đ</span>
     <span class="prize-pill">💄 Son Dưỡng Môi Cao Cấp</span>
     <span class="prize-pill">🌿 Nạ Cao Cấp</span>
-    <span class="prize-pill">✨ Cấy Trắng Căng Bóng 99k</span>
+    <span class="prize-pill">✨ Cấy Trắng Căng Bóng 0Đ</span>
   </div>
 </section>
 
@@ -383,11 +383,11 @@ canvas#wc{border-radius:50%;display:block;}
 <script>
 const PZ = [
   { seg:'💍 NHẪN VÀNG\nKIM TIỀN',       res:'NHẪN VÀNG KIM TIỀN',                    icon:'💍', bg:'#FFD600', fg:'#7B0050', w:0 },
-  { seg:'🎁 QUÀ TẶNG\nBÍ ẨN ĐẶC BIỆT', res:'🎀 QUÀ TẶNG BÍ ẨN TỰ CHỌN',           icon:'🎁', bg:'#E65100', fg:'#FFEE00', w:70, special:true },
-  { seg:'🌸 TRIỆT\nLÔNG 0Đ',            res:'TRIỆT LÔNG MIỄN PHÍ 0Đ',               icon:'🌸', bg:'#AD1457', fg:'#FFD600', w:8 },
-  { seg:'💄 SON DƯỠNG\nMÔI CAO CẤP',    res:'SON DƯỠNG MÔI CAO CẤP',                icon:'💄', bg:'#E91E8C', fg:'#FFD600', w:8 },
-  { seg:'🌿 NẠ\nCAO CẤP',              res:'MẶT NẠ CAO CẤP',                        icon:'🌿', bg:'#C2185B', fg:'#FFEF80', w:7 },
-  { seg:'✨ CẤY TRẮNG\nCĂNG BÓNG 99K',  res:'GÓI CẤY TRẮNG CĂNG BÓNG 99K (gốc 750k)', icon:'✨', bg:'#880E4F', fg:'#FFD600', w:7 },
+  { seg:'🎁 QUÀ TẶNG\nBÍ ẨN ĐẶC BIỆT', res:'🎀 QUÀ TẶNG BÍ ẨN TỰ CHỌN',           icon:'🎁', bg:'#E65100', fg:'#FFFFFF', w:70, special:true },
+  { seg:'🌸 TRIỆT\nLÔNG 0Đ',            res:'TRIỆT LÔNG MIỄN PHÍ 0Đ',               icon:'🌸', bg:'#AD1457', fg:'#FFFFFF', w:8 },
+  { seg:'💄 SON DƯỠNG\nMÔI CAO CẤP',    res:'SON DƯỠNG MÔI CAO CẤP',                icon:'💄', bg:'#E91E8C', fg:'#FFFFFF', w:8 },
+  { seg:'🌿 NẠ\nCAO CẤP',              res:'MẶT NẠ CAO CẤP',                        icon:'🌿', bg:'#C2185B', fg:'#FFFFFF', w:7 },
+  { seg:'✨ CẤY TRẮNG\nCĂNG BÓNG 0Đ',  res:'GÓI CẤY TRẮNG CĂNG BÓNG 0Đ (gốc 750k)', icon:'✨', bg:'#880E4F', fg:'#FFFFFF', w:7 },
 ];
 
 const N = PZ.length, ARC = 2 * Math.PI / N;
@@ -448,6 +448,7 @@ draw(-Math.PI/2 - ARC/2);
 
 function doSpin() {
   if(spinning) return;
+  if(localStorage.getItem('hm_done')){ alert('🎉 Bạn đã quay rồi nha!\nMỗi số điện thoại chỉ được quay 1 lần.\n📞 Liên hệ 0344 954 939 để nhận quà của bạn.'); return; }
   document.getElementById('wheelSec').scrollIntoView({behavior:'smooth',block:'center'});
   spinning = true;
   const btn = document.getElementById('cbtn');
@@ -540,6 +541,10 @@ function claimPrize() {
   if(!nm){highlight('cN');return;}
   if(!ph){highlight('cP');return;}
 
+  const phKey = ph.replace(/\D/g,'');
+  const claimed = JSON.parse(localStorage.getItem('hm_phones')||'[]');
+  if(claimed.includes(phKey)){ highlight('cP'); alert('📵 Số điện thoại này đã quay và nhận quà rồi nha!\nMỗi số điện thoại chỉ được tham gia 1 lần.\nLiên hệ 0344 954 939 nếu cần hỗ trợ.'); return; }
+
   const btn = document.getElementById('claimBtn');
   btn.disabled = true; btn.textContent = '⏳ Đang xử lý...';
 
@@ -560,8 +565,9 @@ function claimPrize() {
     method:'POST', headers:{'Accept':'application/json'}, body:data
   }).catch(()=>{});
 
-  const nf = new URLSearchParams({'form-name':'dang-ky-quay','Ho ten':nm,'So dien thoai':ph,'Dich vu':svc,'Qua trung':quaTrung,'Thoi gian':thoigian});
-  fetch('/', {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:nf.toString()}).catch(()=>{});
+  claimed.push(phKey);
+  localStorage.setItem('hm_phones', JSON.stringify(claimed));
+  localStorage.setItem('hm_done', '1');
 
   setTimeout(() => {
     document.getElementById('claimForm').style.display = 'none';
