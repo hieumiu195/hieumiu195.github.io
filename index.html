@@ -447,7 +447,6 @@ draw(-Math.PI/2 - ARC/2);
 
 function doSpin() {
   if(spinning) return;
-  if(localStorage.getItem('hm_done')){ showNotice('🎉 Số điện thoại của bạn đã quay rồi!<br>Mỗi số điện thoại chỉ được quay 1 lần.'); return; }
   document.getElementById('wheelSec').scrollIntoView({behavior:'smooth',block:'center'});
   spinning = true;
   const btn = document.getElementById('cbtn');
@@ -566,7 +565,6 @@ function claimPrize() {
 
   claimed.push(phKey);
   localStorage.setItem('hm_phones', JSON.stringify(claimed));
-  localStorage.setItem('hm_done', '1');
 
   setTimeout(() => {
     document.getElementById('claimForm').style.display = 'none';
