@@ -238,10 +238,9 @@ canvas#wc{border-radius:50%;display:block;}
   <div class="prizes-row">
     <span class="prize-pill hot">🎁 Quà Tặng Bí Ẩn</span>
     <span class="prize-pill">💍 Nhẫn Vàng Kim Tiền</span>
-    <span class="prize-pill">🎁 Quà Tặng Bí Ẩn</span>
     <span class="prize-pill">🌸 Triệt Lông 0Đ</span>
     <span class="prize-pill">💄 Son Dưỡng Môi Cao Cấp</span>
-    <span class="prize-pill">🌿 Nạ Cao Cấp</span>
+    <span class="prize-pill">🌿 Mặt Nạ Cao Cấp</span>
     <span class="prize-pill">✨ Cấy Trắng Căng Bóng 0Đ</span>
   </div>
 </section>
@@ -386,7 +385,7 @@ const PZ = [
   { seg:'🎁 QUÀ TẶNG\nBÍ ẨN ĐẶC BIỆT', res:'🎀 QUÀ TẶNG BÍ ẨN TỰ CHỌN',           icon:'🎁', bg:'#E65100', fg:'#FFFFFF', w:70, special:true },
   { seg:'🌸 TRIỆT\nLÔNG 0Đ',            res:'TRIỆT LÔNG MIỄN PHÍ 0Đ',               icon:'🌸', bg:'#AD1457', fg:'#FFFFFF', w:8 },
   { seg:'💄 SON DƯỠNG\nMÔI CAO CẤP',    res:'SON DƯỠNG MÔI CAO CẤP',                icon:'💄', bg:'#E91E8C', fg:'#FFFFFF', w:8 },
-  { seg:'🌿 NẠ\nCAO CẤP',              res:'MẶT NẠ CAO CẤP',                        icon:'🌿', bg:'#C2185B', fg:'#FFFFFF', w:7 },
+  { seg:'🌿 MẶT NẠ\nCAO CẤP',          res:'MẶT NẠ CAO CẤP',                        icon:'🌿', bg:'#C2185B', fg:'#FFFFFF', w:7 },
   { seg:'✨ CẤY TRẮNG\nCĂNG BÓNG 0Đ',  res:'GÓI CẤY TRẮNG CĂNG BÓNG 0Đ (gốc 750k)', icon:'✨', bg:'#880E4F', fg:'#FFFFFF', w:7 },
 ];
 
@@ -448,7 +447,7 @@ draw(-Math.PI/2 - ARC/2);
 
 function doSpin() {
   if(spinning) return;
-  if(localStorage.getItem('hm_done')){ alert('🎉 Bạn đã quay rồi nha!\nMỗi số điện thoại chỉ được quay 1 lần.\n📞 Liên hệ 0344 954 939 để nhận quà của bạn.'); return; }
+  if(localStorage.getItem('hm_done')){ showNotice('🎉 Số điện thoại của bạn đã quay rồi!<br>Mỗi số điện thoại chỉ được quay 1 lần.'); return; }
   document.getElementById('wheelSec').scrollIntoView({behavior:'smooth',block:'center'});
   spinning = true;
   const btn = document.getElementById('cbtn');
@@ -543,7 +542,7 @@ function claimPrize() {
 
   const phKey = ph.replace(/\D/g,'');
   const claimed = JSON.parse(localStorage.getItem('hm_phones')||'[]');
-  if(claimed.includes(phKey)){ highlight('cP'); alert('📵 Số điện thoại này đã quay và nhận quà rồi nha!\nMỗi số điện thoại chỉ được tham gia 1 lần.\nLiên hệ 0344 954 939 nếu cần hỗ trợ.'); return; }
+  if(claimed.includes(phKey)){ highlight('cP'); showNotice('📵 Số điện thoại này đã quay rồi!<br>Mỗi số điện thoại chỉ được tham gia 1 lần.'); return; }
 
   const btn = document.getElementById('claimBtn');
   btn.disabled = true; btn.textContent = '⏳ Đang xử lý...';
@@ -661,6 +660,23 @@ function confetti(){
     loop();
   },6000);
 })();
+
+function showNotice(msg){
+  document.getElementById('noticeMsg').innerHTML = msg;
+  document.getElementById('noticeBg').style.display = 'flex';
+}
+function closeNotice(){ document.getElementById('noticeBg').style.display = 'none'; }
 </script>
+
+<!-- THONG BAO TREN TRANG (thay alert, chay duoc moi trinh duyet) -->
+<div id="noticeBg" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99999;align-items:center;justify-content:center;padding:24px;">
+  <div style="background:#fff;border-radius:18px;max-width:340px;width:100%;padding:26px 22px;text-align:center;box-shadow:0 12px 44px rgba(0,0,0,.35);">
+    <div style="font-size:48px;line-height:1">📵</div>
+    <div id="noticeMsg" style="font-size:17px;font-weight:900;color:#7B0050;margin:12px 0 6px;line-height:1.4"></div>
+    <div style="font-size:14px;color:#666;margin-bottom:16px">Xin liên hệ để nhận quà của bạn 🎁</div>
+    <a href="tel:0344954939" style="display:block;background:linear-gradient(135deg,#E91E8C,#AD1457);color:#fff;font-weight:900;padding:14px;border-radius:12px;text-decoration:none;margin-bottom:8px;font-size:16px">📞 Gọi ngay 0344 954 939</a>
+    <button onclick="closeNotice()" style="width:100%;padding:11px;background:#f0f0f0;border:none;border-radius:12px;font-weight:700;color:#777;font-size:14px;cursor:pointer">Đã hiểu</button>
+  </div>
+</div>
 </body>
 </html>
