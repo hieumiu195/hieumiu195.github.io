@@ -647,6 +647,8 @@ document.querySelectorAll('.regForm').forEach(function(form){
     var ph=form.sdt.value.trim();
     var dv=form.dichvu.value||'(chưa chọn)';
     if(!nm||ph.replace(/\D/g,'').length<8){ alert('Vui lòng nhập đúng Họ tên và Số điện thoại nha!'); return; }
+    /* Gui vao Google Sheet qua Google Form */
+    try{var gf=new FormData();gf.append('entry.220971018',nm);gf.append('entry.1924436978',ph);gf.append('entry.621338551',dv);fetch('https://docs.google.com/forms/d/e/1FAIpQLScjp-LAMgPEONh-6C2tEwHTI1GYWNJh1C9nbkAwJUuLkGP1vw/formResponse',{method:'POST',mode:'no-cors',body:gf});}catch(_){}
     var btn=form.querySelector('button');
     var oldTxt=btn.textContent; btn.textContent='Đang gửi...'; btn.disabled=true;
     var data=new FormData();
