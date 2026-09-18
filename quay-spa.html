@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Vòng Quay May Mắn – TARUS Beauty</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Single committed visual world: a lit jewel-box at night, matching
+     TARUS Beauty's forest+gold identity. Intentionally not theme-switching. */
+  :root{
+    --ink:#071A10;
+    --panel:#0F3A25;
+    --panel-light:#1C5C3B;
+    --gold:#C9A24C;
+    --gold-soft:#EBD9A3;
+    --rose:#C23A5E;
+    --cream:#F6EFE2;
+
+    --font-display:'Playfair Display', 'Times New Roman', serif;
+    --font-body:'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html, body{ margin:0; padding:0; }
+
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(ellipse 90% 55% at 50% 8%, rgba(201,162,76,0.16), transparent 60%),
+      radial-gradient(ellipse 120% 80% at 50% 100%, rgba(0,0,0,0.35), transparent 60%),
+      var(--ink);
+    color:var(--cream);
+    font-family:var(--font-body);
+    display:flex;
+    justify-content:center;
+  }
+
+  .stage{
+    width:100%;
+    max-width:460px;
+    padding:34px 20px 44px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+
+  .eyebrow{
+    align-self:flex-start;
+    font-size:11.5px;
+    font-weight:700;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+    opacity:0.85;
+    margin:0 0 10px 6px;
+  }
+
+  h1.headline{
+    font-family:var(--font-display);
+    font-style:italic;
+    font-weight:700;
+    font-size:clamp(28px, 7vw, 36px);
+    line-height:1.08;
+    margin:0 0 8px;
+    text-align:center;
+    text-wrap:balance;
+    color:var(--cream);
+  }
+
+  p.subhead{
+    max-width:30ch;
+    text-align:center;
+    font-size:14.5px;
+    line-height:1.55;
+    color:#CFE0D2;
+    margin:0 0 28px;
+  }
+
+  .wheel-frame{
+    position:relative;
+    width:min(84vw, 340px);
+    aspect-ratio:1/1;
+    margin:6px 0 30px;
+    animation:frameIn .7s cubic-bezier(.2,.7,.25,1) both;
+  }
+  @keyframes frameIn{
+    from{ opacity:0; transform:scale(.92); }
+    to{ opacity:1; transform:scale(1); }
+  }
+
+  svg.rim, svg.wheel-svg{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    overflow:visible;
+  }
+  svg.rim{ pointer-events:none; }
+  svg.wheel-svg{
+    filter:drop-shadow(0 10px 26px rgba(0,0,0,.55));
+    transform-origin:50% 50%;
+  }
+
+  .stud{ animation:twinkle 3.6s ease-in-out infinite; }
+  @keyframes twinkle{
+    0%,100%{ opacity:.55; }
+    50%{ opacity:1; }
+  }
+
+  .pointer{
+    position:absolute;
+    top:-3%;
+    left:50%;
+    width:7.5%;
+    aspect-ratio:1/1.15;
+    transform:translate(-50%,-38%) rotate(45deg);
+    background:linear-gradient(135deg, var(--gold-soft), var(--gold) 55%, #8a6a26);
+    border-radius:3px;
+    box-shadow:0 3px 8px rgba(0,0,0,.5), inset 0 1px 1px rgba(255,255,255,.5);
+    z-index:6;
+  }
+
+  .hub{
+    position:absolute;
+    top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    width:27%; height:27%;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--gold-soft), var(--gold) 55%, #8a6a26 100%);
+    border:3px solid var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    text-align:center;
+    font-family:var(--font-body);
+    font-weight:800;
+    font-size:clamp(12px,3.4vw,14.5px);
+    letter-spacing:0.04em;
+    color:var(--ink);
+    cursor:pointer;
+    user-select:none;
+    box-shadow:0 6px 16px rgba(0,0,0,.55), inset 0 2px 2px rgba(255,255,255,.4);
+    z-index:7;
+    transition:transform .15s ease;
+  }
+  .hub:active{ transform:translate(-50%,-50%) scale(0.95); }
+  .hub.disabled{ opacity:.65; cursor:default; }
+
+  .sector-text{
+    font-family:var(--font-body);
+    text-anchor:middle;
+    dominant-baseline:middle;
+  }
+
+  .footnote{
+    max-width:32ch;
+    text-align:center;
+    font-size:12px;
+    line-height:1.6;
+    color:#9FBBA9;
+  }
+
+  .modal-overlay{
+    position:fixed; inset:0;
+    background:rgba(3,12,7,.82);
+    backdrop-filter:blur(2px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:50;
+    padding:22px;
+  }
+  .modal-overlay.show{ display:flex; }
+
+  .ticket{
+    position:relative;
+    width:100%;
+    max-width:320px;
+    background:linear-gradient(165deg,#123c27,var(--ink));
+    border:1px solid var(--gold);
+    border-radius:14px;
+    padding:30px 26px 26px;
+    text-align:center;
+    box-shadow:0 24px 60px rgba(0,0,0,.6);
+    animation:ticketIn .4s cubic-bezier(.2,.8,.25,1) both;
+  }
+  @keyframes ticketIn{
+    from{ opacity:0; transform:translateY(14px) scale(.96); }
+    to{ opacity:1; transform:translateY(0) scale(1); }
+  }
+  .ticket::before, .ticket::after{
+    content:"";
+    position:absolute;
+    left:50%; transform:translateX(-50%);
+    width:22px; height:22px;
+    background:var(--ink);
+    border-radius:50%;
+  }
+  .ticket::before{ top:-11px; }
+  .ticket::after{ bottom:-11px; }
+
+  .ticket .eyebrow-mini{
+    font-size:10.5px;
+    font-weight:700;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+    opacity:.8;
+    margin-bottom:10px;
+  }
+  .ticket h2{
+    font-family:var(--font-display);
+    font-style:italic;
+    font-weight:700;
+    font-size:22px;
+    margin:0 0 14px;
+    color:var(--cream);
+  }
+  .ticket .rule{
+    width:56px; height:1px;
+    margin:0 auto 16px;
+    background:linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .ticket .prize-name{
+    font-family:var(--font-body);
+    font-weight:800;
+    font-size:19px;
+    letter-spacing:0.01em;
+    color:var(--cream);
+    margin:0 0 10px;
+    text-wrap:balance;
+  }
+  .ticket .prize-price{
+    display:inline-block;
+    font-size:13px;
+    font-weight:700;
+    color:var(--ink);
+    background:linear-gradient(135deg,var(--gold-soft),var(--gold));
+    padding:5px 16px;
+    border-radius:999px;
+    margin-bottom:18px;
+  }
+  .ticket p.hint{
+    font-size:12.5px;
+    line-height:1.6;
+    color:#CFE0D2;
+    margin:0 0 22px;
+  }
+  .ticket button{
+    width:100%;
+    background:var(--rose);
+    color:#fff;
+    border:none;
+    padding:13px 20px;
+    border-radius:10px;
+    font-family:var(--font-body);
+    font-size:14.5px;
+    font-weight:700;
+    cursor:pointer;
+    transition:filter .15s ease, transform .15s ease;
+  }
+  .ticket button:hover{ filter:brightness(1.08); }
+  .ticket button:active{ transform:scale(.98); }
+
+  @media (prefers-reduced-motion: reduce){
+    .wheel-frame{ animation:none; }
+    .stud{ animation:none; }
+    .ticket{ animation:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="eyebrow">TARUS Beauty · Ưu đãi tại quầy</div>
+  <h1 class="headline">Vòng Quay May Mắn</h1>
+  <p class="subhead">Dành riêng cho quý khách ghé lại hôm nay — chạm để nhận ưu đãi ngay tại spa.</p>
+
+  <div class="wheel-frame">
+    <svg class="rim" viewBox="0 0 400 400" id="rimSvg"></svg>
+    <svg class="wheel-svg" viewBox="0 0 400 400" id="wheelSvg">
+      <g id="sectors"></g>
+    </svg>
+    <div class="pointer"></div>
+    <div class="hub" id="spinBtn">QUAY<br>NGAY</div>
+  </div>
+
+  <p class="footnote">Mỗi lượt chạm áp dụng cho 1 lượt sử dụng dịch vụ hôm nay. Nhân viên tư vấn sẽ hỗ trợ ngay tại quầy.</p>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="ticket">
+    <div class="eyebrow-mini">Phần thưởng của bạn</div>
+    <h2>Chúc mừng quý khách!</h2>
+    <div class="rule"></div>
+    <div class="prize-name" id="prizeName"></div>
+    <div class="prize-price" id="prizePrice"></div>
+    <p class="hint">Nhân viên TARUS Beauty sẽ hỗ trợ áp dụng ưu đãi này ngay tại quầy.</p>
+    <button id="closeModalBtn">Tuyệt vời, cảm ơn!</button>
+  </div>
+</div>
+
+<script>
+  // Tỉ lệ trúng thật (%) — chỉ dùng nội bộ, KHÔNG hiển thị ra giao diện
+  const PRIZES = [
+    { name:"Thải Chì",               lines:["THẢI CHÌ"],                 price:"250.000đ",   weight:20 },
+    { name:"Trắng Sáng Căng Bóng",   lines:["TRẮNG SÁNG","CĂNG BÓNG"],   price:"750.000đ",   weight:20 },
+    { name:"Triệt Lông",             lines:["TRIỆT LÔNG"],               price:"1.000.000đ", weight:20 },
+    { name:"Nâng Cơ Trắng Sáng",     lines:["NÂNG CƠ","TRẮNG SÁNG"],     price:"1.200.000đ", weight:5  },
+    { name:"Son Dưỡng",              lines:["SON DƯỠNG"],                price:"250.000đ",   weight:5  },
+    { name:"Thải Độc Tố Chuyên Sâu", lines:["THẢI ĐỘC TỐ","CHUYÊN SÂU"], price:"350.000đ",   weight:30 },
+    { name:"Phun Môi",               lines:["PHUN MÔI"],                 price:"3.500.000đ", weight:0  },
+    { name:"Mỹ Phẩm",                lines:["MỸ PHẨM"],                  price:"1.500.000đ", weight:0  }
+  ];
+
+  const COLORS = ["#1C5C3B", "#C9A24C"]; // alternating jewel-box tones
+  const N = PRIZES.length;
+  const SEG = 360 / N;
+  const CX = 200, CY = 200;
+  const svgNS = "http://www.w3.org/2000/svg";
+
+  function polarToCartesian(cx, cy, r, angleDeg){
+    const a = (angleDeg - 90) * Math.PI / 180;
+    return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
+  }
+
+  // --- sectors ---
+  const sectorsG = document.getElementById("sectors");
+  const R_WHEEL = 170;
+
+  PRIZES.forEach((p, i) => {
+    const start = i * SEG;
+    const end = start + SEG;
+    const fill = COLORS[i % 2];
+    const textColor = fill === "#C9A24C" ? "#071A10" : "#F6EFE2";
+
+    const p1 = polarToCartesian(CX, CY, R_WHEEL, start);
+    const p2 = polarToCartesian(CX, CY, R_WHEEL, end);
+    const path = document.createElementNS(svgNS, "path");
+    path.setAttribute("d", `M ${CX},${CY} L ${p1.x.toFixed(2)},${p1.y.toFixed(2)} A ${R_WHEEL},${R_WHEEL} 0 0,1 ${p2.x.toFixed(2)},${p2.y.toFixed(2)} Z`);
+    path.setAttribute("fill", fill);
+    path.setAttribute("stroke", "#071A10");
+    path.setAttribute("stroke-width", "1.5");
+    sectorsG.appendChild(path);
+
+    const mid = start + SEG / 2;
+    const baseR = R_WHEEL * 0.60;
+    const lines = [...p.lines, p.price];
+    const lineGap = 15;
+    const startY = -(lines.length - 1) * lineGap / 2;
+
+    lines.forEach((line, li) => {
+      const pos = polarToCartesian(CX, CY, baseR, mid);
+      const t = document.createElementNS(svgNS, "text");
+      t.setAttribute("class", "sector-text");
+      t.setAttribute("x", pos.x.toFixed(2));
+      t.setAttribute("y", (pos.y + startY + li * lineGap).toFixed(2));
+      t.setAttribute("fill", textColor);
+      t.setAttribute("font-size", li === lines.length - 1 ? "10.5" : "12");
+      t.setAttribute("font-weight", li === lines.length - 1 ? "600" : "800");
+      t.setAttribute("letter-spacing", "0.01em");
+      t.textContent = line;
+      sectorsG.appendChild(t);
+    });
+  });
+
+  // --- decorative rim with studs ---
+  const rimSvg = document.getElementById("rimSvg");
+  const R_RIM_LINE = 182;
+  const R_STUDS = 193;
+  const STUD_COUNT = 20;
+
+  const groove = document.createElementNS(svgNS, "circle");
+  groove.setAttribute("cx", CX); groove.setAttribute("cy", CY);
+  groove.setAttribute("r", R_RIM_LINE);
+  groove.setAttribute("fill", "none");
+  groove.setAttribute("stroke", "#8a6a26");
+  groove.setAttribute("stroke-width", "3");
+  groove.setAttribute("opacity", "0.9");
+  rimSvg.appendChild(groove);
+
+  for(let i=0;i<STUD_COUNT;i++){
+    const ang = (360/STUD_COUNT) * i;
+    const pos = polarToCartesian(CX, CY, R_STUDS, ang);
+    const c = document.createElementNS(svgNS, "circle");
+    c.setAttribute("class","stud");
+    c.setAttribute("cx", pos.x.toFixed(2));
+    c.setAttribute("cy", pos.y.toFixed(2));
+    c.setAttribute("r", "4.2");
+    c.setAttribute("fill", "url(#studGrad)");
+    c.style.animationDelay = (i*0.18)+"s";
+    rimSvg.appendChild(c);
+  }
+  const defs = document.createElementNS(svgNS,"defs");
+  defs.innerHTML = `<radialGradient id="studGrad" cx="35%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#F6EFE2"/>
+      <stop offset="55%" stop-color="#C9A24C"/>
+      <stop offset="100%" stop-color="#7a5c22"/>
+    </radialGradient>`;
+  rimSvg.insertBefore(defs, rimSvg.firstChild);
+
+  // --- weighted pick ---
+  function pickWeightedIndex(){
+    const total = PRIZES.reduce((s,p)=>s+p.weight,0);
+    let r = Math.random() * total;
+    for(let i=0;i<PRIZES.length;i++){
+      if(r < PRIZES[i].weight) return i;
+      r -= PRIZES[i].weight;
+    }
+    return PRIZES.length - 1;
+  }
+
+  const wheelSvg = document.getElementById("wheelSvg");
+  const spinBtn = document.getElementById("spinBtn");
+  const modalOverlay = document.getElementById("modalOverlay");
+  const prizeNameEl = document.getElementById("prizeName");
+  const prizePriceEl = document.getElementById("prizePrice");
+  const closeModalBtn = document.getElementById("closeModalBtn");
+
+  let currentRotation = 0;
+  let spinning = false;
+
+  spinBtn.addEventListener("click", () => {
+    if(spinning) return;
+    spinning = true;
+    spinBtn.classList.add("disabled");
+
+    const index = pickWeightedIndex();
+    const centerAngle = index * SEG + SEG / 2;
+    const extraSpins = 6;
+    const targetWithinCircle = (360 - centerAngle) % 360;
+
+    const prevMod = ((currentRotation % 360) + 360) % 360;
+    let delta = targetWithinCircle - prevMod;
+    if(delta <= 0) delta += 360;
+
+    currentRotation += extraSpins * 360 + delta;
+
+    wheelSvg.style.transition = "transform 4.6s cubic-bezier(0.15, 0.85, 0.25, 1)";
+    wheelSvg.style.transform = `rotate(${currentRotation}deg)`;
+
+    setTimeout(() => {
+      spinning = false;
+      spinBtn.classList.remove("disabled");
+      const prize = PRIZES[index];
+      prizeNameEl.textContent = prize.name;
+      prizePriceEl.textContent = "Trị giá " + prize.price;
+      modalOverlay.classList.add("show");
+    }, 4700);
+  });
+
+  closeModalBtn.addEventListener("click", () => {
+    modalOverlay.classList.remove("show");
+  });
+</script>
+</body>
+</html>
