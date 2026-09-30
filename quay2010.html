@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Vòng Quay 20/10 – Tarus Beauty</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{--pink:#E91E8C;--pd:#AD1457;--pdp:#7B0050;--gold:#FFD600;--g2:#F9A825;--g3:#FFEF80;}
+html,body{height:100%;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:linear-gradient(160deg,var(--pdp) 0%,var(--pd) 45%,var(--pink) 100%);color:#fff;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2vmin;padding:2vmin;user-select:none;}
+.brand{font-size:clamp(12px,2.2vmin,20px);font-weight:700;letter-spacing:3px;color:rgba(255,255,255,.7);}
+.brand b{color:var(--gold);}
+h1{font-size:clamp(26px,6vmin,58px);font-weight:900;text-align:center;line-height:1.1;text-shadow:0 3px 16px rgba(0,0,0,.3);}
+h1 span{color:var(--gold);}
+.sub{font-size:clamp(13px,2.4vmin,22px);font-weight:700;color:var(--g3);}
+.ww{position:relative;width:min(78vmin,640px);aspect-ratio:1;}
+.ring{position:absolute;inset:0;border-radius:50%;background:conic-gradient(#FFF1B8,#E6A800 18%,#FFEC8B 35%,#C98A00 52%,#FFF1B8 70%,#E6A800 88%,#FFEC8B);padding:3%;box-shadow:0 0 0 4px rgba(255,255,255,.6),0 20px 50px rgba(60,0,30,.6);}
+canvas{width:100%;height:100%;border-radius:50%;display:block;}
+.ptr{position:absolute;top:-5%;left:50%;transform:translateX(-50%);width:9%;z-index:5;filter:drop-shadow(0 3px 6px rgba(0,0,0,.4));}
+.btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:22%;aspect-ratio:1;border-radius:50%;border:5px solid #fff;background:radial-gradient(circle at 35% 35%,#FFEF80,var(--gold) 55%,var(--g2));color:var(--pdp);font-weight:900;font-size:clamp(14px,3.2vmin,28px);cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.4);z-index:4;}
+.btn:disabled{opacity:.75;cursor:default;}
+.ld{position:absolute;width:2.2%;aspect-ratio:1;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);transform:translate(-50%,-50%);animation:bk 1s infinite;}
+.ld:nth-child(even){animation-delay:.5s;}
+@keyframes bk{50%{opacity:.2}}
+.mbg{display:none;position:fixed;inset:0;background:rgba(60,0,35,.85);align-items:center;justify-content:center;z-index:20;padding:20px;}
+.mbg.on{display:flex;}
+.mbox{background:linear-gradient(145deg,var(--pdp),var(--pd),var(--pink));border:3px solid var(--gold);border-radius:28px;padding:36px 28px;text-align:center;max-width:560px;width:100%;animation:pop .45s cubic-bezier(.34,1.56,.64,1);box-shadow:0 24px 60px rgba(0,0,0,.5);}
+@keyframes pop{from{transform:scale(.5);opacity:0}}
+.me{font-size:clamp(50px,10vmin,90px);}
+.ml{font-size:clamp(14px,2.6vmin,22px);font-weight:800;color:var(--gold);letter-spacing:4px;margin:6px 0 10px;}
+.mv{font-size:clamp(24px,5vmin,44px);font-weight:900;line-height:1.25;}
+.mv span{display:block;color:var(--gold);font-size:1.15em;margin-top:6px;}
+.mn{font-size:clamp(13px,2.2vmin,18px);color:rgba(255,255,255,.85);margin:14px 0 22px;}
+.mclose{padding:14px 40px;font-size:clamp(16px,2.8vmin,22px);font-weight:900;border:none;border-radius:14px;background:linear-gradient(135deg,var(--gold),var(--g2));color:var(--pdp);cursor:pointer;}
+.cf{position:fixed;top:-12px;pointer-events:none;border-radius:3px;z-index:30;animation:fall linear forwards;}
+@keyframes fall{to{transform:translateY(110vh) rotate(600deg);opacity:0}}
+.petal{position:fixed;top:-30px;pointer-events:none;opacity:.8;z-index:1;}
+</style>
+</head>
+<body>
+
+<div class="brand">PHUN XĂM HIẾU MIU · <b>TARUS BEAUTY</b></div>
+<h1>🌹 VÒNG QUAY <span>MỪNG 20/10</span> 🌹</h1>
+<div class="sub">✨ Quay là có quà – Chúc chị luôn xinh đẹp ✨</div>
+
+<div class="ww">
+  <svg class="ptr" viewBox="0 0 36 44"><polygon points="18,44 36,12 18,0 0,12" fill="#FFD600"/><polygon points="18,36 29,14 18,6 7,14" fill="#FFEF80"/></svg>
+  <div class="ring" id="ring"><canvas id="wc" width="1000" height="1000"></canvas></div>
+  <button class="btn" id="btn" onclick="spin()">QUAY</button>
+</div>
+
+<div class="mbg" id="mb">
+  <div class="mbox">
+    <div class="me" id="mE">🎁</div>
+    <div class="ml">✦ CHÚC MỪNG CHỊ ✦</div>
+    <div class="mv" id="mV"></div>
+    <div class="mn">Chụp màn hình hoặc báo nhân viên để nhận quà nha chị 💗</div>
+    <button class="mclose" onclick="document.getElementById('mb').classList.remove('on')">XONG</button>
+  </div>
+</div>
+
+<script>
+// ===== 10 Ô QUÀ =====  (w = tỉ lệ trúng: chỉ 2 ô 500K có w, mỗi ô 50%)
+const PZ = [
+  { a:'3 BUỔI TRIỆT LÔNG', b:'+ VOUCHER 100K', L:['3 BUỔI TRIỆT LÔNG','+ VOUCHER 100K'], icon:'🌸', bg:'#E91E8C', w:0 },
+  { a:'GLOW WHITE',        b:'+ VOUCHER 100K', L:['GLOW WHITE','+ VOUCHER 100K'], icon:'✨', bg:'#FFD600', fg:'#6A0045', w:0 },
+  { a:'3 BUỔI TRIỆT LÔNG', b:'+ VOUCHER 200K', L:['3 BUỔI TRIỆT LÔNG','+ VOUCHER 200K'], icon:'🌸', bg:'#AD1457', w:0 },
+  { a:'GLOW WHITE',        b:'+ VOUCHER 200K', L:['GLOW WHITE','+ VOUCHER 200K'], icon:'✨', bg:'#FFC107', fg:'#6A0045', w:0 },
+  { a:'3 BUỔI TRIỆT LÔNG', b:'+ VOUCHER 300K', L:['3 BUỔI TRIỆT LÔNG','+ VOUCHER 300K'], icon:'🌸', bg:'#C2185B', w:0 },
+  { a:'GLOW WHITE',        b:'+ VOUCHER 300K', L:['GLOW WHITE','+ VOUCHER 300K'], icon:'✨', bg:'#FFD600', fg:'#6A0045', w:0 },
+  { a:'3 BUỔI TRIỆT LÔNG', b:'+ VOUCHER 400K', L:['3 BUỔI TRIỆT LÔNG','+ VOUCHER 400K'], icon:'🌸', bg:'#880E4F', w:0 },
+  { a:'GLOW WHITE',        b:'+ VOUCHER 400K', L:['GLOW WHITE','+ VOUCHER 400K'], icon:'✨', bg:'#FFC107', fg:'#6A0045', w:0 },
+  { a:'3 BUỔI TRIỆT LÔNG', b:'+ VOUCHER 500K', L:['3 BUỔI TRIỆT LÔNG','+ VOUCHER 500K'], icon:'🌸', bg:'#D81B60', w:50 },
+  { a:'GLOW WHITE',        b:'+ VOUCHER 500K', L:['GLOW WHITE','+ VOUCHER 500K'], icon:'✨', bg:'#FFD600', fg:'#6A0045', w:50 },
+];
+
+const N = PZ.length, ARC = 2*Math.PI/N;
+const cv = document.getElementById('wc'), ctx = cv.getContext('2d');
+let ang = -Math.PI/2 - ARC/2, spinning = false;
+
+function draw(r){
+  const R = cv.width/2, rad = R-4;
+  ctx.clearRect(0,0,cv.width,cv.height);
+  for(let i=0;i<N;i++){
+    const a0=r+i*ARC, p=PZ[i];
+    ctx.beginPath(); ctx.moveTo(R,R); ctx.arc(R,R,rad,a0,a0+ARC); ctx.closePath();
+    ctx.fillStyle=p.bg; ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,.7)'; ctx.lineWidth=5; ctx.stroke();
+  }
+  // bóng nổi
+  ctx.save(); ctx.beginPath(); ctx.arc(R,R,rad,0,7); ctx.clip();
+  const g=ctx.createRadialGradient(R*.6,R*.5,10,R*.6,R*.5,rad*1.1);
+  g.addColorStop(0,'rgba(255,255,255,.3)'); g.addColorStop(.5,'rgba(255,255,255,0)');
+  ctx.fillStyle=g; ctx.fillRect(0,0,cv.width,cv.height); ctx.restore();
+  // chữ (to, đậm, tự co cho vừa ô)
+  ctx.textAlign='right'; ctx.textBaseline='middle'; ctx.lineJoin='round';
+  const inner=140, outer=rad-24, maxW=outer-inner, mid=(inner+outer)/2;
+  for(let i=0;i<N;i++){
+    const ca=r+i*ARC+ARC/2, p=PZ[i], dark=!!p.fg;
+    ctx.save(); ctx.translate(R,R); ctx.rotate(ca);
+    const sizes=[42,42];
+    const gap=50;
+    p.L.forEach((ln,li)=>{
+      let fs=sizes[li]; ctx.font='900 '+fs+'px "Arial Black",Arial,sans-serif';
+      while(ctx.measureText(ln).width>maxW && fs>20){fs--; ctx.font='900 '+fs+'px "Arial Black",Arial,sans-serif';}
+      const y=(li-(p.L.length-1)/2)*gap;
+      ctx.lineWidth=dark?3:7; ctx.strokeStyle=dark?'rgba(255,255,255,.9)':'rgba(40,0,20,.85)';
+      ctx.strokeText(ln,outer,y); ctx.fillStyle=dark?p.fg:'#fff'; ctx.fillText(ln,outer,y);
+    });
+    ctx.restore();
+  }
+  ctx.beginPath(); ctx.arc(R,R,125,0,7); ctx.fillStyle='#7B0050'; ctx.fill();
+  ctx.strokeStyle='rgba(255,214,0,.6)'; ctx.lineWidth=5; ctx.stroke();
+}
+draw(ang);
+
+(function(){ // đèn viền
+  const ring=document.getElementById('ring');
+  for(let i=0;i<20;i++){const d=document.createElement('div');d.className='ld';const a=i/20*2*Math.PI;
+    d.style.left=(50+48.5*Math.cos(a))+'%'; d.style.top=(50+48.5*Math.sin(a))+'%'; ring.appendChild(d);}
+})();
+
+function spin(){
+  if(spinning) return; spinning=true;
+  const btn=document.getElementById('btn'); btn.disabled=true; btn.textContent='...';
+  const tot=PZ.reduce((s,p)=>s+p.w,0); let rnd=Math.random()*tot, pi=0;
+  for(let i=0;i<N;i++){rnd-=PZ[i].w; if(rnd<0){pi=i;break;}}
+  const jitter=(Math.random()-.5)*ARC*.7;
+  let extra=(-Math.PI/2-ang-(pi*ARC+ARC/2)+jitter)%(2*Math.PI); if(extra<0) extra+=2*Math.PI;
+  const total=(7+Math.floor(Math.random()*3))*2*Math.PI+extra, dur=6000, t0=performance.now(), a0=ang;
+  requestAnimationFrame(function f(now){
+    const t=Math.min((now-t0)/dur,1); ang=a0+total*(1-Math.pow(1-t,4)); draw(ang);
+    if(t<1) requestAnimationFrame(f);
+    else{ spinning=false; btn.disabled=false; btn.textContent='QUAY'; show(pi); }
+  });
+}
+
+function show(pi){
+  const p=PZ[pi];
+  document.getElementById('mE').textContent=p.icon;
+  document.getElementById('mV').innerHTML=p.a+'<span>'+p.b.replace('+ ','🎁 ')+'</span>';
+  document.getElementById('mb').classList.add('on');
+  const cols=['#FFD600','#E91E8C','#fff','#FF5EC4','#D50032','#FFEF80'];
+  for(let i=0;i<90;i++) setTimeout(()=>{const e=document.createElement('div');e.className='cf';
+    const s=6+Math.random()*10; e.style.cssText+=`left:${Math.random()*100}vw;width:${s}px;height:${s}px;background:${cols[i%cols.length]};animation-duration:${2+Math.random()*1.5}s`;
+    document.body.appendChild(e); setTimeout(()=>e.remove(),3800);}, i*20);
+}
+
+// hoa hồng rơi nhẹ
+setInterval(()=>{const e=document.createElement('div');e.className='petal';e.textContent=['🌹','🌸','🌷'][Math.floor(Math.random()*3)];
+  e.style.left=Math.random()*100+'vw'; e.style.fontSize=(16+Math.random()*14)+'px'; e.style.transition='transform 10s linear,opacity 10s linear';
+  document.body.appendChild(e); requestAnimationFrame(()=>{e.style.transform=`translate(${Math.random()*80-40}px,110vh) rotate(${Math.random()*540}deg)`;e.style.opacity='.15';});
+  setTimeout(()=>e.remove(),10200);},1600);
+</script>
+</body>
+</html>
