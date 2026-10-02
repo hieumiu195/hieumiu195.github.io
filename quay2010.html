@@ -61,18 +61,18 @@ canvas{width:100%;height:100%;border-radius:50%;display:block;}
 </div>
 
 <script>
-// ===== 10 Ô QUÀ =====  (w = tỉ lệ trúng: chỉ 2 ô 500K có w, mỗi ô 50%)
+// ===== 10 Ô QUÀ =====  (w = tỉ lệ trúng: 6 ô 300K/400K/500K mỗi ô 1 phần = 1/6; ô 100K, 200K không trúng)
 const PZ = [
   { a:'3 BUỔI TRIỆT LÔNG', b:'+ VOUCHER 100K', L:['3 BUỔI TRIỆT LÔNG','+ VOUCHER 100K'], icon:'🌸', bg:'#E91E8C', w:0 },
   { a:'GLOW WHITE',        b:'+ VOUCHER 100K', L:['GLOW WHITE','+ VOUCHER 100K'], icon:'✨', bg:'#FFD600', fg:'#6A0045', w:0 },
   { a:'3 BUỔI TRIỆT LÔNG', b:'+ VOUCHER 200K', L:['3 BUỔI TRIỆT LÔNG','+ VOUCHER 200K'], icon:'🌸', bg:'#AD1457', w:0 },
   { a:'GLOW WHITE',        b:'+ VOUCHER 200K', L:['GLOW WHITE','+ VOUCHER 200K'], icon:'✨', bg:'#FFC107', fg:'#6A0045', w:0 },
-  { a:'3 BUỔI TRIỆT LÔNG', b:'+ VOUCHER 300K', L:['3 BUỔI TRIỆT LÔNG','+ VOUCHER 300K'], icon:'🌸', bg:'#C2185B', w:0 },
-  { a:'GLOW WHITE',        b:'+ VOUCHER 300K', L:['GLOW WHITE','+ VOUCHER 300K'], icon:'✨', bg:'#FFD600', fg:'#6A0045', w:0 },
-  { a:'3 BUỔI TRIỆT LÔNG', b:'+ VOUCHER 400K', L:['3 BUỔI TRIỆT LÔNG','+ VOUCHER 400K'], icon:'🌸', bg:'#880E4F', w:0 },
-  { a:'GLOW WHITE',        b:'+ VOUCHER 400K', L:['GLOW WHITE','+ VOUCHER 400K'], icon:'✨', bg:'#FFC107', fg:'#6A0045', w:0 },
-  { a:'3 BUỔI TRIỆT LÔNG', b:'+ VOUCHER 500K', L:['3 BUỔI TRIỆT LÔNG','+ VOUCHER 500K'], icon:'🌸', bg:'#D81B60', w:50 },
-  { a:'GLOW WHITE',        b:'+ VOUCHER 500K', L:['GLOW WHITE','+ VOUCHER 500K'], icon:'✨', bg:'#FFD600', fg:'#6A0045', w:50 },
+  { a:'3 BUỔI TRIỆT LÔNG', b:'+ VOUCHER 300K', L:['3 BUỔI TRIỆT LÔNG','+ VOUCHER 300K'], icon:'🌸', bg:'#C2185B', w:1 },
+  { a:'GLOW WHITE',        b:'+ VOUCHER 300K', L:['GLOW WHITE','+ VOUCHER 300K'], icon:'✨', bg:'#FFD600', fg:'#6A0045', w:1 },
+  { a:'3 BUỔI TRIỆT LÔNG', b:'+ VOUCHER 400K', L:['3 BUỔI TRIỆT LÔNG','+ VOUCHER 400K'], icon:'🌸', bg:'#880E4F', w:1 },
+  { a:'GLOW WHITE',        b:'+ VOUCHER 400K', L:['GLOW WHITE','+ VOUCHER 400K'], icon:'✨', bg:'#FFC107', fg:'#6A0045', w:1 },
+  { a:'3 BUỔI TRIỆT LÔNG', b:'+ VOUCHER 500K', L:['3 BUỔI TRIỆT LÔNG','+ VOUCHER 500K'], icon:'🌸', bg:'#D81B60', w:1 },
+  { a:'GLOW WHITE',        b:'+ VOUCHER 500K', L:['GLOW WHITE','+ VOUCHER 500K'], icon:'✨', bg:'#FFD600', fg:'#6A0045', w:1 },
 ];
 
 const N = PZ.length, ARC = 2*Math.PI/N;
